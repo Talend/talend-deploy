@@ -1,0 +1,9 @@
+---
+#  ./tasks/firewalld.yml
+
+- name: open firewall port for CmdLine 8002
+  firewalld:
+    port: 8002/tcp
+    permanent: true
+    state: enabled
+    immediate: true

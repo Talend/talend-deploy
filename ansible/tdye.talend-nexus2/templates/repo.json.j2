@@ -1,0 +1,17 @@
+{
+	"data": {
+		"repoType": "hosted",
+		"id": "{{ item.repo }}",
+		"name": "{{ item.repo }}",
+		"writePolicy": "{{ item.write_policy }}",
+		"browseable": true,
+		"indexable": true,
+		"exposed": true,
+		"notFoundCacheTTL": 1440,
+		"repoPolicy": "{{ item.repo_policy }}",
+		"provider": "maven2",
+		"providerRole": "org.sonatype.nexus.proxy.repository.Repository",
+		"downloadRemoteIndexes": false,
+		"checksumPolicy": "IGNORE"
+	}
+}

@@ -1,0 +1,30 @@
+---
+# ./roles/tac/common.yml
+ 
+- name: create Talend tomcat dir
+  file:
+    path: "{{ talend_root }}/tac"
+    state: directory
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+    mode: 0775
+    recurse: yes
+  
+- name: create Talend utils dir
+  file:
+    path: "{{ talend_root }}/utils"
+    state: directory
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+    mode: 0775
+    recurse: yes
+    
+- name: create Talend install dir
+  file:
+    path: /talend_install
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+    
+

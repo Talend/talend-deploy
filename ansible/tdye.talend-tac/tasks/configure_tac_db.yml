@@ -1,0 +1,57 @@
+---
+# ./tac/tasks/configure_tac_db.yml
+
+#- name: Download MariaDB JDBC Driver
+#  get_url:
+#    url: https://downloads.mariadb.com/Connectors/java/connector-java-2.2.2/mariadb-java-client-2.2.2.jar
+#    dest: "{{ talend_root }}/tac/apache-tomcat/endorsed"
+#    mode: 0755
+#    owner: "{{ talend_user }}"
+#    group: "{{ talend_group }}"  
+
+
+
+- name: Wait until the file TAC config file is present before continuing
+  wait_for:
+    path: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/configuration.properties"
+
+- name: create endorsed dir in tomcat
+  file:
+    path: "{{ talend_root }}/tac/apache-tomcat/endorsed"
+    state: directory
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+    mode: 0775
+    recurse: yes
+ 
+- name: move JDBC driver to endorsed dir
+  copy:
+    src: "{{ tac_db_jdbc_path }}/{{ tac_db_jdbc_driver }}"
+    dest: "{{ talend_root }}/tac/apache-tomcat/endorsed/"
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"    
+
+- name:  point TAC at mySQL DB 1
+  lineinfile:
+    path: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/configuration.properties"
+    regexp: '^database.url='
+    line: "database.url={{ tac_db_url }}"
+    
+- name:  point TAC at mySQL DB  2
+  lineinfile:
+    path: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/configuration.properties"
+    regexp: '^database.driver='
+    line: "database.driver={{ tac_db_jdbc_driver_name }}"
+    #line: 'database.driver=org.gjt.mm.mysql.Driver'     
+    
+- name:  point TAC at mySQL DB  3
+  lineinfile:
+    path: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/configuration.properties"
+    regexp: '^database.username='
+    line: "database.username={{ tac_db_username }}"
+    
+- name:  point TAC at mySQL DB  4
+  lineinfile:
+    path: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/configuration.properties"
+    regexp: '^database.password='
+    line: "database.password={{ tac_db_password }}"

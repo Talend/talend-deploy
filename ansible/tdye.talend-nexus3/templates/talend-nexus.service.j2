@@ -1,0 +1,14 @@
+[Unit]
+Description=Talend Nexus service
+After=network.target
+
+[Service]
+Type=forking
+ExecStart={{ talend_root }}/{{ nexus_bin }}/nexus start
+ExecStop={{ talend_root }}/{{ nexus_bin }}/bin/nexus stop
+User={{ talend_user }}
+Group={{ talend_group }}
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

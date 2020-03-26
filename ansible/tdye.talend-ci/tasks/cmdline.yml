@@ -1,0 +1,69 @@
+---
+# ./tasks/cmdline.yml
+
+- name: create Talend cmdline dir
+  file:
+    path: "{{ talend_root }}/cmdline"
+    state: directory
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}" 
+    mode: 0775
+    recurse: yes
+    
+- name: move cmdLine to tmp
+  copy:
+    src: "{{ talend_cmdline_install_path }}/{{ talend_cmdline_zip }}"
+    dest: /tmp
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"   
+    
+    
+- name: unarchive Cmdline-Studio
+  command: "unzip -q /tmp/{{ talend_cmdline_zip }}"
+  args:
+    chdir: "{{ talend_root }}/cmdline"
+ 
+
+ 
+- name: Find Cmdline/Studio name
+  find:
+    paths: "{{ talend_root }}/cmdline"
+    file_type: directory
+    recurse: no
+    patterns: 'Talend*'
+  register: found_studio
+
+- debug: 
+    var: found_studio.files[0].path 
+    
+    
+- name: Move unarchived cmdline to usable dir name    
+  command:
+    mv {{ found_studio.files[0].path }} {{ talend_root }}/cmdline/studio
+
+- name:  chown for all 
+  command: "chown -R {{ talend_user }}:{{ talend_group }} {{ talend_root }}"
+  
+- name: chmod of the linux studio executable
+  file:
+    path: "{{ talend_root }}/cmdline/studio/Talend-Studio-linux-gtk-x86_64"
+    mode: 0777
+ 
+ 
+ 
+- name: Creates the cmdline start script
+  template: 
+    src: start_cmdline.sh.j2 
+    dest: "{{ talend_root }}/cmdline/start_cmdline.sh"
+    mode: 0755
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"   
+  
+- name: Creates the cmdline stop script
+  template: 
+    src: stop_cmdline.sh.j2 
+    dest: "{{ talend_root }}/cmdline/stop_cmdline.sh"
+    mode: 0755
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"   
+    

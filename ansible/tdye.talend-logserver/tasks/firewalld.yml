@@ -1,0 +1,62 @@
+---
+#  ./tac/roles/firewalld.yml
+
+- name: open firewall port for ElasticSearch 9200
+  firewalld:
+    port: 9200/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: open firewall port for ElasticSearch 9300    
+  firewalld:
+    port: 9300/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+    
+- name: open firewall port for Kibana 5601    
+  firewalld:
+    port: 5601/tcp
+    permanent: true
+    state: enabled
+    immediate: true  
+    
+    
+#- name: open firewall port for Logstash 8050  
+#  firewalld:
+#    port: 8050/tcp
+#    permanent: true
+#    state: enabled
+#    immediate: true      
+#    
+#    
+#- name: open firewall port for Logstash 8052  
+#  firewalld:
+#    port: 8052/tcp
+#    permanent: true
+#    state: enabled
+#    immediate: true      
+#   
+#- name: open firewall port for Logstash 8053  
+#  firewalld:
+#    port: 8053/tcp
+#    permanent: true
+#    state: enabled
+#    immediate: true      
+# 
+#- name: open firewall port for Logstash 8054  
+#  firewalld:
+#    port: 8054/tcp
+#    permanent: true
+#    state: enabled
+#    immediate: true      
+#     
+#     
+#- name: open firewall port for Logstash 8055  
+#  firewalld:
+#    port: 8055/tcp
+#    permanent: true
+#    state: enabled
+#    immediate: true      
+#  

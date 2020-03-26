@@ -1,0 +1,69 @@
+---
+#  ./tac/roles/firewalld.yml
+
+
+#http_port: 8040
+#https_port: 9001
+#rmi_registry_port: 1099
+#rmi_server_port: 44444
+#ssh_port: 8101
+#file_server_port: 8001
+#monitoring_port: 8888
+#messaging_port: 8555
+
+- name: open firewall port for Runtime http_port 
+  firewalld:
+    port: "{{ http_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: open firewall port for Runtime https_port
+  firewalld:
+    port: "{{ https_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+    
+- name: open firewall port for Runtime rmi_registry_port
+  firewalld:
+    port: "{{ rmi_registry_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true  
+
+
+- name: open firewall port for Runtime rmi_server_port
+  firewalld:
+    port: "{{ rmi_server_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: open firewall port for Runtime ssh_port
+  firewalld:
+    port: "{{ ssh_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: open firewall port for Runtime file_server_port
+  firewalld:
+    port: "{{ file_server_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: open firewall port for Runtime monitoring_port
+  firewalld:
+    port: "{{ monitoring_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true
+
+- name: open firewall port for Runtime messaging_port
+  firewalld:
+    port: "{{ messaging_port }}/tcp"
+    permanent: true
+    state: enabled
+    immediate: true    

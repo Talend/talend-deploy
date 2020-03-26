@@ -1,0 +1,42 @@
+---
+# ./tasks/utility.yml
+
+- name: Include epel repo
+  include_tasks: epel.yml
+  
+- name: Add Jenkins repository
+  command: wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+  
+- name: Add Jenkins repository iokey
+  command: sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+  
+  
+- name: Add maven repository
+  command: wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
+
+- name: install the latest version of Maven
+  yum:
+    name: apache-maven
+    state: latest
+    
+- name: install the latest version of Jenkins
+  yum:
+    name: jenkins
+    state: latest    
+    disable_gpg_check: yes
+
+- name: install the latest version of git
+  yum:
+    name: git
+    state: latest    
+    
+    
+##### Housekeeping:  Reset link to java to the Oracle JDK; Maven installs OpenJDK 
+- name: relink to Oracle JDK
+  file:
+    src: /usr/java/latest/bin/java
+    dest: /usr/bin/java
+    state: link
+    owner: root
+    group: root 
+    mode: 0777

@@ -1,0 +1,52 @@
+---
+# ./roles/rjs/rjs.yml
+
+- name: unarchive RJS
+  unarchive:
+    #src: /talend_install/Manual_Installation/RJS/Talend-JobServer-20180116_1512-V6.5.1.zip
+    src: "{{ talend_rjs_install_path }}/{{ talend_rjs_zip }}"
+    dest: /tmp
+    remote_src: yes
+    
+- name:  create directory
+  command:  "mkdir -p {{ talend_root }}/jobserver"
+    
+- name: move RJS to Talend Root/jobserver
+  command: "mv /tmp/{{ (talend_rjs_zip | splitext)[0] }} {{ talend_root }}/jobserver/agent"
+  
+- name: change owner of RJS
+  command:  "chown -R   {{ talend_user }}:{{ talend_group }} {{ talend_root }}/jobserver"
+  #copy:
+  #  #src: /tmp/Talend-JobServer-20180116_1512-V6.5.1/
+  #  
+  #  src: "/tmp/{{ (talend_rjs_zip | splitext)[0] }}/*"
+  #  dest: "{{ talend_root }}/jobserver/agent/"
+  #  owner: "{{ talend_user }}"
+  #  group: "{{ talend_group }}"
+  #
+  
+- name: change start script mode    
+  file:
+    path: "{{ talend_root }}/jobserver/agent/start_rs.sh"
+    mode: 0744    
+    
+- name: change stop script mode    
+  file:
+    path: "{{ talend_root }}/jobserver/agent/stop_rs.sh"
+    mode: 0744        
+
+- name: Creates the rjs start_jobserver.sh file
+  template: 
+    src: start_jobserver.sh.j2 
+    dest: "{{ talend_root }}/jobserver/start_jobserver.sh"
+    mode: 0744
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"  
+    
+- name: Creates the rjs stop_jobserver.sh file
+  template: 
+    src: stop_jobserver.sh.j2 
+    dest: "{{ talend_root }}/jobserver/stop_jobserver.sh"
+    mode: 044
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"    

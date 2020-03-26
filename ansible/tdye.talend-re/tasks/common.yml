@@ -1,0 +1,46 @@
+---
+# ./tasks/common.yml
+  
+ 
+- name: create Talend install dir
+  file:
+    path: /tdyefiles
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+ 
+- name: check that talend group exists
+  getent:
+    database: group
+    key: "{{ talend_group }}"
+    split: ':'
+    fail_key: false
+- debug:
+    var: getent_group
+    
+- name: Create talend group
+  group:
+    name: "{{ talend_group }}"
+    state: present
+  when: getent_group[talend_group] == none       
+
+
+   
+- name: check that talend user exists
+  getent:
+    database: passwd
+    key: "{{ talend_user }}"
+    fail_key: false
+- debug:
+    var: getent_passwd
+    
+- name: Create talend user account
+  user: 
+    name: "{{ talend_user }}"
+    state: present
+    append: yes
+    group: "{{ talend_group }}"
+    shell: "/bin/bash"
+  when: getent_passwd[talend_user] == none    
+

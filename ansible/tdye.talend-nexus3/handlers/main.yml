@@ -1,0 +1,8 @@
+---
+# handlers/main.yml
+
+- name: Restart NEXUS
+  systemd:
+    name: "talend-nexus-{{ talend_version }}"
+    state: restarted
+    daemon_reload: yes

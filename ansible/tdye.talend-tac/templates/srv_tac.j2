@@ -1,0 +1,168 @@
+#!/bin/bash
+# Basic support for IRIX style chkconfig
+###
+# chkconfig: 235 98 40
+# description: Starts talend components on the server
+###
+
+# Comments to support LSB init script conventions  
+### BEGIN INIT INFO
+# Provides: talend-tac-6.5.1
+# Required-Start: $local_fs $network $remote_fs
+# Required-Stop: $local_fs $network $remote_fs
+# Default-Start:  2 3 5
+# Default-Stop:   1 4 6
+# Short-Description: start and stop Talend Administration Center server
+# Description: Talend Administration Center server
+### END INIT INFO
+
+# include the red hat init functions.
+if [ -e /etc/rc.d/init.d/functions ]
+then
+  . /etc/rc.d/init.d/functions
+fi
+
+#JAVA_HOME environment variable needs to be set so that all the services can find it and the associated
+#class path jars
+#check to see if it's already set.
+export JAVA_HOME=/usr/java/default/jre
+if [ -n "$JAVA_HOME" -a -x $JAVA_HOME/bin/java ]; then
+  # if it is not in PATH, add it there
+  if [[ ":$PATH:" != *":$JAVA_HOME/bin:"* ]]; then
+    export PATH=$JAVA_HOME/bin:$PATH
+  fi
+fi
+
+if [ "$TALEND_HOME" == "" ]
+then
+  export TALEND_HOME="{{ talend_root }}"
+fi
+
+# Set RUN_AS_USER to run it under specific user
+#RUN_AS_USER=
+
+# set talend's administration center directory
+TAC_HOME="{{ talend_root }}/tac"
+
+CATALINA_HOME="{{ talend_root }}/tac/apache-tomcat"
+
+# install type:
+#  1= embedded tomcat with talend
+#  2= using external tomcat
+INSTALL_TYPE=1
+
+#set the return value of the script to 0, which means no error.
+RETVAL=0
+
+if [ -n "$RUN_AS_USER" ]; then
+  IDEXE="/usr/xpg4/bin/id"
+  if [ ! -x $IDEXE ]; then
+    IDEXE="/usr/bin/id"
+    if [ ! -x $IDEXE ]; then
+      IDEXE="id"
+    fi
+  fi
+  if [ "`$IDEXE -u -n`" = "$RUN_AS_USER" ]; then
+    # Already running as the configured user.  Avoid password prompts by not calling su.
+    RUN_AS_USER=""
+  fi
+fi
+
+start() {
+  # the start has 2 cases:
+  #   1- tac is installed with embedded tomcat: (install_type=1)
+  #      in this case, just call the start_tac.sh script in tac home directory
+  #   2- tac is installed on an external tomcat: (install_type=2)
+  #      in this case, go to the /bin dorectory of tomcat and run the startup.sh
+  #      (make sure catalina directory is correct above and /bin/startup.sh exists)
+  echo -n "starting talend administration center..."
+  if [ $INSTALL_TYPE -eq 1 ]; then
+    cd $TAC_HOME
+    if [ -n "$RUN_AS_USER" ]; then
+      su -m $RUN_AS_USER -s /bin/bash -c "./start_tac.sh"
+    else
+      ./start_tac.sh
+    fi
+  fi
+  if [ $INSTALL_TYPE -eq 2 ]; then
+    cd $CATALINA_HOME/bin
+    if [ -n "$RUN_AS_USER" ]; then
+      su -m $RUN_AS_USER -s /bin/bash -c "./startup.sh"
+    else
+      ./startup.sh
+    fi
+  fi
+  echo " done."
+}
+
+stop () {
+  echo -n "shutting down talend administration center..."
+  # please read the start() command comment to understand the install_type options
+  # for embedded tomcat (install_type=1): shutdown tomcat by calling stop_tac script
+  # for existing tomcat (install_type=2): shutdown tomcat by calling the shutdown script
+  if [ $INSTALL_TYPE -eq 1 ]; then
+    cd $TAC_HOME
+    if [ -n "$RUN_AS_USER" ]; then
+      su -m $RUN_AS_USER -s /bin/bash -c "./stop_tac.sh"
+    else
+      ./stop_tac.sh
+    fi
+  fi
+  if [ $INSTALL_TYPE -eq 2 ]; then
+    cd $CATALINA_HOME/bin
+    if [ -n "$RUN_AS_USER" ]; then
+      su -m $RUN_AS_USER -s /bin/bash -c "./shutdown.sh"
+    else
+      ./shutdown.sh
+    fi
+  fi
+  echo " done."
+}
+
+restart() {
+  stop
+  sleep 3
+  start
+}
+
+reload() {
+	restart	
+}	
+
+case "$1" in
+start)
+	start
+	;;
+stop)
+	stop
+	;;
+reload)
+	reload
+	;;
+restart)
+	restart
+	;;
+condrestart)
+	if [ -f $lockdir/$prog ]; then
+	    restart
+	fi
+	;;
+status)
+        #below we look for the process running tac
+        echo -n "Checking status of talend administration center...."
+		#see if tac is running.
+        STATUS=`ps -ef | grep java | grep catalina | grep '/tac/' | wc -l`
+        if [ ${STATUS} -gt 0 ]; then
+	     #all are running.
+	     echo " ok."
+        else
+	     #not all running.
+	     echo " failed."
+        fi
+        ;;
+*)
+	echo $"Usage: $0 {start|stop|status|restart|condrestart|reload}"
+	RETVAL=3
+esac
+echo 
+exit $RETVAL

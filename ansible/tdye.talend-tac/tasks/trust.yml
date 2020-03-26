@@ -1,0 +1,23 @@
+---
+# ./tac/tasks/trust.yml
+# trust code contributed by Ram Tak
+
+- name: add java keystore to TAC
+  lineinfile:
+    path: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/configuration.properties"
+    line: "keystore.path={{keystore_file_path}}"
+
+- name: add java keystore password to TAC
+  lineinfile:
+    path: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/configuration.properties"
+    line: "keystore.password={{keystore_password}}"
+
+- name: add java truststore to TAC
+  lineinfile:
+    path: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/configuration.properties"
+    line: "truststore.path={{keystore_file_path}}"
+
+- name: add java truststore password to TAC
+  lineinfile:
+    path: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/configuration.properties"
+    line: "truststore.password={{keystore_password}}"

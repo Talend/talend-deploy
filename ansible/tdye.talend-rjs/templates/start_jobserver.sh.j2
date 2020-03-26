@@ -1,0 +1,15 @@
+#!/bin/sh
+currUser=`id -un`
+if [ "$currUser" != "root" ]; then
+  # Check additionally that current user is owner of /opt/talend/jobserver
+  fileOwner=`ls -ld {{ talend_root }}/jobserver | awk ' { print $3 } '`
+  if [ "$currUser" != "$fileOwner" ]; then
+    echo "ERROR: current user is $currUser, but jobserver base folder is owned by $fileOwner"
+    echo "Jobserver cannot work under such condition."
+    echo "Please change user to $fileOwner with 'su' or 'sudo' and then re-run this script."
+    exit 0
+  fi
+fi
+
+cd "{{ talend_root }}/jobserver/agent"
+./start_rs.sh > /dev/null 2>&1 < /dev/null &

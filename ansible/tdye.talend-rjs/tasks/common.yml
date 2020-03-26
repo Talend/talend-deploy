@@ -1,0 +1,13 @@
+---
+# ./roles/rjs/common.yml
+  
+ 
+- name: create Talend install dir
+  file:
+    path: /tdyefiles
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+    
+

@@ -1,0 +1,53 @@
+---
+# ./roles/logserver/logserver.yml
+
+  
+
+- name: Ansible check talend directory
+  stat:
+    path: "{{ talend_root }}"
+  register: talend_dir   
+    
+- name:  create directory
+  command:  "mkdir -p {{ talend_root }}"
+  when: not talend_dir.stat.exists
+  
+- name: unarchive Logserver
+  unarchive:
+    #src: /talend_install/Manual_Installation/logserver/Talend-LogServer-V7.0.1-linux-x86_64.tar.gz
+    src: "{{ talend_logserver_install_path }}/{{ talend_logserver_zip }}"
+    dest: "{{ talend_root }}"
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+    #remote_src: yes  
+    
+#- name: Copy logserv from tmp to talend root 
+#  copy:
+#    src: /tmp/logserv
+#    dest: "{{ talend_root }}"
+#    owner: "{{ talend_user }}"
+#    group: "{{ talend_group }}" 
+#  
+#- name: Remove tmp/logserv
+#  file: 
+#    path: /tmp/logserv
+#    state: absent
+#  
+  
+ 
+- name: change start script mode    
+  file:
+    path: "{{ talend_root }}/logserv/start_logserver.sh"
+    mode: 0744    
+    
+- name: change stop script mode    
+  file:
+    path: "{{ talend_root }}/logserv/stop_logserver.sh"
+    mode: 0744        
+ 
+# - name: chown logserver dir
+#  file:
+#    path: "{{ talend_root }}/logserv"
+#    owner: "{{ talend_user }}"
+#    group: "{{ talend_group }}"
+#  when: nexus_repo.stat.exists

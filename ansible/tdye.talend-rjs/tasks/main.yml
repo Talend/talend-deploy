@@ -1,0 +1,42 @@
+---
+# ./roles/rjs/main.yml
+
+- name: Mount Azure FS
+  mount:
+    path: "{{ az_path }}"
+    src: "{{ az_src }}"
+    fstype: cifs
+    opts: "vers=3.0,username={{ az_username }},password={{ az_password }},dir_mode=0777,file_mode=0777,sec=ntlmssp"
+    state: mounted
+  when: azure_vm
+  
+- name: Include common tasks
+  include_tasks: common.yml
+    
+- name: Include Core Remote Job Server
+  include_tasks: rjs.yml
+  
+- name: RJS SystemD stuff
+  include_tasks: rjs_systemd.yml
+
+  
+- name: Test for firewalld running
+  command: systemctl status firewalld
+  register: firewalld_status
+  ignore_errors: true
+
+- debug: msg="**** firewalld is running"
+  when: firewalld_status.stdout.find("running") != -1
+
+- debug: msg="**** firewalld is not running"
+  when: firewalld_status.stdout.find("running") == -1
+
+- name: Install firewalld rules
+  import_tasks: firewalld.yml
+  when: firewalld_status.stdout.find("running") != -1
+  
+  
+- name: Restart RJS
+  command: /bin/true
+  notify: Restart RJS
+

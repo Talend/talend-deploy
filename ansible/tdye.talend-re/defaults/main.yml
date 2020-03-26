@@ -1,0 +1,25 @@
+---
+# Variables listed here are applicable to all host groups
+
+talend_root: /opt/talend-7.1.1
+talend_version: 7.1.1
+
+talend_user: talend
+talend_group: talend
+
+# RE params
+talend_re_install_path: /talend_install/Manual_Installation/RE
+talend_re_zip: Talend-RemoteEngine-V2.4.0-108.tar
+
+pairing_key: C84C88C12F58F4CA3B12E20907B73C015DDF610C13DE8EF52379F9C1EDD2DBC9
+pairing_service_url:  https://pair.eu.cloud.talend.com
+#pairing_service_url:  https://pair.us.cloud.talend.com
+#pairing_service_url:  https://pair.ap.cloud.talend.com
+
+
+# Azure FS parameters
+azure_vm: false	
+az_username: XXXXXXXXXXX
+az_password: YYYYYYYYYYYYYYYYYYYYY
+az_src: //ZZZZZZZZZZZZZZZZ.file.core.windows.net/<share name>
+az_path: /talend_install

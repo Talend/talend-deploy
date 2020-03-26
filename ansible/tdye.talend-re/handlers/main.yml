@@ -1,0 +1,8 @@
+---
+# roles/re/handlers/main.yml
+
+- name: Start RE
+  systemd:
+    name:  Talend-Remote-Engine.service
+    state: started
+    daemon_reload: yes

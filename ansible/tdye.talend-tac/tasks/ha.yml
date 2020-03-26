@@ -1,0 +1,27 @@
+---
+# ./tac/tasks/ha.yml
+# ha code contributed by Ram Tak
+
+- name: Set up TAC high availability 1/4
+  replace:
+    dest: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/quartz.properties"
+    regexp: '#org.quartz.scheduler.instanceName'
+    replace: 'org.quartz.scheduler.instanceName'
+
+- name: Set up TAC high availability 2/4
+  replace:
+    dest: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/quartz.properties"
+    regexp: '#org.quartz.scheduler.instanceId'
+    replace: 'org.quartz.scheduler.instanceId'
+
+- name: Set up TAC high availability 3/4
+  replace:
+    dest: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/quartz.properties"
+    regexp: '#org.quartz.jobStore.isClustered'
+    replace: 'org.quartz.jobStore.isClustered'
+
+- name: Set up TAC high availability 4/4
+  replace:
+    dest: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/quartz.properties"
+    regexp: '#org.quartz.jobStore.clusterCheckinInterval'
+    replace: 'org.quartz.jobStore.clusterCheckinInterval'

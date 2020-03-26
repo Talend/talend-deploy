@@ -1,0 +1,17 @@
+{
+	"data": {
+		"repoType": "hosted",
+		"id": "talend-updates",
+		"name": "talend-updates",
+		"writePolicy": "ALLOW_WRITE_ONCE",
+		"browseable": true,
+		"indexable": true,
+		"exposed": true,
+		"notFoundCacheTTL": 1440,
+		"repoPolicy": "RELEASE",
+		"provider": "maven2",
+		"providerRole": "org.sonatype.nexus.proxy.repository.Repository",
+		"downloadRemoteIndexes": false,
+		"checksumPolicy": "IGNORE"
+	}
+}

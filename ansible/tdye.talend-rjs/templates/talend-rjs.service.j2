@@ -1,0 +1,16 @@
+[Unit]
+Description=Talend Execution Server (JobServer) service
+After=network.target
+
+[Service]
+Type=forking
+Environment=JAVA_HOME=/usr/java/default/jre
+Environment=PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/java/default/jre/bin
+ExecStart=/bin/bash {{ talend_root }}/jobserver/start_jobserver.sh
+ExecStop=/bin/bash {{ talend_root }}/jobserver/stop_jobserver.sh
+User={{ talend_user }}
+Group={{ talend_group }}
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

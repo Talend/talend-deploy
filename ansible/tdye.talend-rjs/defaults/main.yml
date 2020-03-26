@@ -1,0 +1,21 @@
+---
+# Variables listed here are applicable to all host groups
+
+talend_root: /opt/talend-7.0.1
+talend_version: 7.0.1
+
+talend_user: talend
+talend_group: talend
+
+# RJS params
+talend_rjs_install_path: /talend_install/Manual_Installation/RJS
+talend_rjs_zip: Talend-JobServer-20180411_1414-V7.0.1.zip
+
+
+
+# Azure FS parameters
+azure_vm: false	
+az_username: XXXXXXXXXXX
+az_password: YYYYYYYYYYYYYYYYYYYYY
+az_src: //ZZZZZZZZZZZZZZZZ.file.core.windows.net/<share name>
+az_path: /talend_install

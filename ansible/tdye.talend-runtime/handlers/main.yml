@@ -1,0 +1,8 @@
+---
+# tasks/handlers/main.yml
+
+- name: Start Runtime
+  systemd:
+    name:  Talend-Runtime.service
+    state: started
+    daemon_reload: yes

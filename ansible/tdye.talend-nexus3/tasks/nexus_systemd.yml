@@ -1,0 +1,25 @@
+---
+# ./tasks/nexus_systemd.yml
+
+- name: Creates the nexus system service file
+  template: 
+    src: talend-nexus.service.j2 
+    dest: "/etc/systemd/system/talend-nexus-{{ talend_version }}.service"
+    mode: 0755
+    owner: root
+    group: root    
+   
+- name: create Talend nexus systemd service link
+  file:
+    src: "/etc/systemd/system/talend-nexus-{{ talend_version }}.service"
+    dest: "/etc/systemd/system/multi-user.target.wants/talend-nexus-{{ talend_version }}.service"
+    state: link
+    owner: root
+    group: root
+    mode: 0777    
+    
+- name: Start service talend-nexus-{{ talend_version }}, if not running
+  service:
+    name: "talend-nexus-{{ talend_version }}"
+    state: started    
+    enabled: yes

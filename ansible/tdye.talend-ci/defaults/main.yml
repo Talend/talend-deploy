@@ -1,0 +1,45 @@
+---
+# ./defaults/main.yml
+
+talend_root: /opt/talend-7.0.1
+talend_version: 7.0.1
+
+talend_user: vagrant
+talend_group: vagrant
+
+epel_repo_url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+epel_repo_gpg_key_url: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
+epel_repofile_path: "/etc/yum.repos.d/epel.repo"
+
+
+# CI Builder params
+talend_ci_install_path: /talend_install
+talend_ci_zip: Talend-CI-Builder-20180411_1414-V7.0.1.zip
+
+# Cloud Publisher params (optional)
+#talend_cp_install_path: /talend_install
+#talend_cp_zip: Talend-Cloud-Publisher-20180411_1414-V7.0.1.zip
+
+# Talend Cloud params required when Cloud Publisher is defined)
+#talend_cloud_service_url: https://ipaas.eu.cloud.talend.com/ipaas-services/services/inventory   #Europe
+##talend_cloud_service_url: https://ipaas.us.cloud.talend.com/ipaas-services/services/inventory  #US
+##talend_cloud_service_url: https://ipaas.XXXXX.cloud.talend.com/ipaas-services/services/inventory  #Asia
+
+#talend_cloud_service_login: user@company.com
+#talend_cloud_service_password: <password>
+
+# nexus params
+nexus_user: admin
+nexus_password: <password>
+nexus_server: 192.168.999.999
+nexus_port: 8081
+
+
+### Azure FS parameters
+azure_vm: false
+
+# install source mount
+az_username: XXXXXXXXXXXXX
+az_password: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+az_src: //ZZZZZZZZZZZZZZZZZZZ.file.core.windows.net/QQQQQQQQQQQQQQQQQ
+az_path: /talend_install

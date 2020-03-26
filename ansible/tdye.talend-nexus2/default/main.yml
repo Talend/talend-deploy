@@ -1,0 +1,29 @@
+---
+# Default Variables for tdye.talend-nexus
+
+talend_root: /opt/talend-7.0.1
+talend_version: 7.0.1
+
+talend_user: talend
+talend_group: talend
+
+
+# Nexus params
+talend_install_path: /talend_install/Manual_Installation/TAC
+nexus_archive: nexus-2.14.9-01-bundle.tar.gz
+nexus_bin: nexus-2.14.9-01/bin
+
+nexus_port: 8081                    # Default is 8081
+nexus_user: admin					
+nexus_password: Talend123			
+
+
+### Azure FS parameters
+azure_vm: false
+
+# install source mount
+az_username: XXXXXXXXXXXXX
+az_password: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+az_src: //ZZZZZZZZZZZZZZZZZZZ.file.core.windows.net/QQQQQQQQQQQQQQQQQ
+az_path: /talend_install
+

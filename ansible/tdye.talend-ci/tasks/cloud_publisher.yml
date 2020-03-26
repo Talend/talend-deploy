@@ -1,0 +1,54 @@
+---
+# ./tasks/cloud_publisher.yml
+
+
+- name: unarchive Cloud Publisher
+  unarchive:
+    src: "{{ talend_cp_install_path }}/{{ talend_cp_zip }}"
+    dest: /tmp
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}" 
+    remote_src: no    
+
+
+- name: move Cloud Publisher to Talend Root/ci-builder
+  command: "mv /tmp/{{ (talend_cp_zip | splitext)[0] }} {{ talend_root }}/ci-builder"    
+  become_user: "{{ talend_user }}"
+  
+  
+  
+- name: Find Cloud Publisher CI jar file
+  find:
+    paths: "{{ talend_root }}/ci-builder/{{ (talend_cp_zip | splitext)[0] }}"
+    recurse: yes
+    patterns: '*.jar'
+  register: found_cp_jar
+    
+- debug: 
+    var: found_cp_jar.files[0].path
+  
+- name: Find Cloud Publisher CI pom file
+  find:
+    paths: "{{ talend_root }}/ci-builder/{{ (talend_cp_zip | splitext)[0] }}"
+    recurse: yes
+    patterns: '*.pom'
+  register: found_cp_pom
+    
+- debug: 
+    var: found_cp_pom.files[0].path  
+  
+ # Install maven extension to maven local repo     
+- name: intall Cloud Publisher extensions
+  command: "mvn install:install-file -Dfile={{ found_cp_jar.files[0].path }} -DpomFile={{ found_cp_pom.files[0].path }} -s {{ talend_root }}/cmdline/studio/configuration/maven_user_settings.xml"
+  become_user: "{{ talend_user }}"
+  args:
+    chdir: "{{ talend_root }}/ci-builder/{{ (talend_cp_zip | splitext)[0] }}"
+ 
+ 
+# Install maven extension to nexus thirdparty repo  
+- name: intall Cloud-Publisher extensions to nexus
+  command: "mvn deploy:deploy-file -Dfile={{ found_cp_jar.files[0].path }} -DpomFile={{ found_cp_pom.files[0].path }} -DrepositoryId=thirdparty -Durl=http://{{ nexus_server }}:{{ nexus_port }}{{ nexus_root_url }}{{ nexus_repo_url }}/thirdparty/ -s {{ talend_root }}/cmdline/studio/configuration/maven_user_settings.xml"
+  become_user: "{{ talend_user }}"
+  args:
+    chdir: "{{ talend_root }}/ci-builder/{{ (talend_cp_zip | splitext)[0] }}"    
+  ignore_errors: yes  

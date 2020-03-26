@@ -1,0 +1,16 @@
+[Unit]
+Description=Talend Filebeat service
+After=network.target
+
+[Service]
+Type=simple
+Environment=JAVA_HOME=/usr/java/default/jre
+Environment=PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/java/default/jre/bin
+ExecStart={{ talend_root }}/logserv/filebeat-6.1.2-linux-x86_64/filebeat -e -c {{ talend_root }}/logserv/filebeat-6.1.2-linux-x86_64/filebeat.yml
+User={{ talend_user }}
+Group={{ talend_group }}
+Restart=on-abort
+WorkingDirectory={{ talend_root }}/logserv/filebeat-6.1.2-linux-x86_64
+
+[Install]
+WantedBy=multi-user.target

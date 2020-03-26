@@ -1,0 +1,16 @@
+---
+# roles/logserver/handlers/main.yml
+
+- name: Restart Logserver
+  systemd:
+    name: talend-logserver-{{ talend_version }}.service
+    state: restarted
+    daemon_reload: yes
+#  listen: "restart Logserver"
+
+- name: Restart filebeat
+  systemd:
+    name: talend-filebeat-{{ talend_version }}.service
+    state: restarted
+    daemon_reload: yes
+#  listen: "restart Logserver"

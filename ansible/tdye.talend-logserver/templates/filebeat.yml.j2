@@ -1,0 +1,28 @@
+###################### Filebeat Configuration Example #########################
+
+#=========================== Filebeat prospectors =============================
+
+filebeat.prospectors:
+
+- type: log
+  enabled: true
+  paths:
+    - ${LOG_PATH:{{ tac_logs_dir }} }
+  fields:
+    app_id: ${APP_NAME:TAC}
+  fields_under_root: true
+
+#---------------------------Managing Multiline Messages----------------------
+  multiline.pattern: '^[[:space:]]+(at|\.{3})\b|^Caused by:'
+  multiline.negate: false
+  multiline.match: after
+
+logging.metrics.enabled: false
+#In this example, the pattern matches the following lines:
+#    a line that begins with spaces followed by the word at or ...
+#    a line that begins with the words Caused by:
+
+#----------------------------- Logstash output --------------------------------
+output.logstash:
+  # The Logstash hosts
+  hosts: ["${LOGSTASH_HOSTS:{{ logstash_host }}}:${LOGSTASH_PORT:{{ logstash_port }} }"]

@@ -1,0 +1,10 @@
+---
+# ./roles/nexus/firewalld.yml
+# open Nexus Firewalld ports
+
+- name: open firewall port for Nexus    
+  firewalld:
+    port: 8081/tcp
+    permanent: true
+    state: enabled
+    immediate: true

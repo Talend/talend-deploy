@@ -1,0 +1,54 @@
+---
+# ./tasks/repos.yml
+
+# wait for nexus to be up and running
+- name: Wait for nexus server to start
+  wait_for:
+    host: localhost
+    port: "{{ nexus_port }}"
+    state: started
+    delay: 10
+   
+# Create Nexus2 Talend repositories
+- name: Create Nexus2 Talend repositories 
+  uri:
+    url: "http://localhost:{{ nexus_port }}/nexus/service/local/repositories"
+    method: POST
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    body: "{{ lookup('template', './repo.json.j2') }}"
+    force_basic_auth: yes
+    status_code: 201
+    body_format: json  
+    headers:
+      Content-Type: "application/json; charset=UTF-8"   
+  with_items:
+    - { repo: talend-custom-libs-release, write_policy: ALLOW_WRITE_ONCE, repo_policy: RELEASE }
+    - { repo: talend-custom-libs-snapshot, write_policy: ALLOW_WRITE, repo_policy: SNAPSHOT }
+    - { repo: talend-custom-libs, write_policy: ALLOW_WRITE, repo_policy: SNAPSHOT }
+    - { repo: talend-updates, write_policy: ALLOW_WRITE_ONCE, repo_policy: RELEASE }
+  register: repo_return
+  
+#- debug: 
+#    var: repo_return
+    
+# Create Nexus2 Talend repositories privileges
+- name: Create Nexus2 Talend repositories privileges
+  uri:
+    url: "http://localhost:{{ nexus_port }}/nexus/service/local/privileges_target"
+    method: POST
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    body: "{{ lookup('template', './repo-privs.json.j2') }}"
+    force_basic_auth: yes
+    status_code: 201
+    body_format: json  
+    headers:
+      Content-Type: "application/json; charset=UTF-8"   
+  with_items:
+    - { repo: talend-custom-libs-release }
+    - { repo: talend-custom-libs-snapshot }
+    - { repo: talend-custom-libs }
+    - { repo: talend-updates }
+  register: priv_return
+  

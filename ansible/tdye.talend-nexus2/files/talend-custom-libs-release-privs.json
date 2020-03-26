@@ -1,0 +1,14 @@
+{
+	"data": {
+		"name": "talend-custom-libs-release",
+		"description": "talend-custom-libs-release",
+		"type": "target",
+		"repositoryTargetId": "any",
+		"repositoryId": "talend-custom-libs-release",
+		"repositoryGroupId": "",
+		"method": ["create",
+		"read",
+		"update",
+		"delete"]
+	}
+}

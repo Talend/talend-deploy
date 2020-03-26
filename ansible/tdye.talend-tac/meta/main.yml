@@ -1,0 +1,15 @@
+---
+dependencies:
+  - { role: ChristopherDavenport.universal-tomcat, 
+            become: true,
+            tomcat_version: 8.0.42,
+            tomcat_use_java: false,
+            java_home: /usr/java/default,
+            tomcat_use_apr: false,
+            tomcat_user_name: "{{ talend_user }}",
+            tomcat_user_group: "{{ talend_group }}",
+            tomcat_base_dir: "{{ talend_root }}/tac",
+            tomcat_catalina_home: "{{ talend_root }}/tac/apache-tomcat",
+            tomcat_instance_path:  "{{ talend_root }}/tac/apache-tomcat",
+            tomcat_install_service: false
+    }

@@ -1,0 +1,73 @@
+---
+# ./tasks/re.yml
+
+ - name:  create directory
+   command:  "mkdir -p {{ talend_root }}"  
+  
+ - name: untar the Runtime
+   command:  "tar -xf {{ talend_runtime_install_path }}/{{ talend_runtime_zip }} -C {{ talend_root }}"
+    
+ - name: change owner of Runtime
+   command:  "chown -R   {{ talend_user }}:{{ talend_group }} {{ talend_root }}"
+ 
+
+ - name: find Runtime directory
+   find: 
+     paths: "{{ talend_root }}"
+     patterns: "Talend-Runtime*"
+     file_type: directory
+     recurse: yes
+   register: runtime_dir
+    
+ - debug: 
+     var: runtime_dir.files[0].path    
+
+
+  
+ - name: Temporarily Start Karaf
+   command: "./start"
+   args:
+     chdir: "{{ runtime_dir.files[0].path }}/bin"
+   become: yes
+   become_user: "{{ talend_user }}"
+
+   
+ - name: Wait until the karaf reasonable started
+   wait_for:
+    path: "{{ runtime_dir.files[0].path }}/log/tesb.log"
+    search_regex: "^.*The JMX connector server successfully started.*$"
+   
+   
+ - name: install the wrapper
+   command: "./client -u tadmin -p tadmin -h localhost -r 6 -d 4 -v \"feature:install wrapper\""
+   args:
+     chdir: "{{ runtime_dir.files[0].path }}/bin"
+   become: yes
+   become_user: "{{ talend_user }}"
+ 
+ - name: install the wrapper files
+   command: "./client -u tadmin -p tadmin -h localhost -r 6 -d 4 -v \"wrapper:install -n Talend-Runtime\""
+   args:
+     chdir: "{{ runtime_dir.files[0].path }}/bin"
+   become: yes
+   become_user: "{{ talend_user }}" 
+  
+ - name: shut 'er down
+   command: "./client -u tadmin -p tadmin \"system:shutdown -f\""
+   args:
+     chdir: "{{ runtime_dir.files[0].path }}/bin"
+   become: yes
+   become_user: "{{ talend_user }}"
+   
+   
+ - name:  Change RUN_AS user
+   lineinfile:
+    path: "{{ runtime_dir.files[0].path }}/bin/Talend-Runtime-service"
+    regexp: '^#RUN_AS_USER='
+    line: "RUN_AS_USER={{ talend_user }}"   
+ 
+ - name: change owner of Runtime -- again
+   command:  "chown -R   {{ talend_user }}:{{ talend_group }} {{ talend_root }}"
+ 
+ - name: enable systemd stuff
+   command: "systemctl enable {{ runtime_dir.files[0].path }}/bin/Talend-Runtime.service"

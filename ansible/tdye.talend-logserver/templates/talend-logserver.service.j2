@@ -1,0 +1,17 @@
+[Unit]
+Description=Talend Logserver service
+After=network.target
+
+[Service]
+Type=forking
+Environment=JAVA_HOME=/usr/java/default/jre
+Environment=PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/usr/java/default/jre/bin
+ExecStart=/bin/bash {{ talend_root }}/logserv/start_logserver.sh
+ExecStop=/bin/bash {{ talend_root }}/logserv/stop_logserver.sh
+User={{ talend_user }}
+Group={{ talend_group }}
+Restart=on-abort
+WorkingDirectory={{ talend_root }}/logserv
+
+[Install]
+WantedBy=multi-user.target

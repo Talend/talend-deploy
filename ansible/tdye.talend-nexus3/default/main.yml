@@ -1,0 +1,29 @@
+---
+# Default Variables for tdye.talend-nexus
+
+talend_root: /opt/talend-7.0.1
+talend_version: 7.0.1
+
+talend_user: talend
+talend_group: talend
+
+
+# Nexus params
+talend_install_path: /talend_install/Manual_Installation/TAC
+nexus_archive: Artifact-Repository-Nexus-V3.9.0-01.zip
+nexus_bin: Artifact-Repository-Nexus-3.9.0-01-unix/nexus-3.9.0-01/bin
+
+nexus_port: 8081                    # Default is 8081
+nexus_user: admin					# Required to create 'thirdparty' repo
+nexus_password: Talend123			# Required to create 'thirdparty' repo
+
+
+### Azure FS parameters
+azure_vm: false
+
+# install source mount
+az_username: XXXXXXXXXXXXX
+az_password: YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+az_src: //ZZZZZZZZZZZZZZZZZZZ.file.core.windows.net/QQQQQQQQQQQQQQQQQ
+az_path: /talend_install
+

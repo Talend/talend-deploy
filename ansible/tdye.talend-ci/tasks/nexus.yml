@@ -1,0 +1,65 @@
+
+# tasks/nexus.yml
+
+# Sniff the Nexus server to determine what version we have
+
+- name:  Sniff Nexus server to determine version
+  command: "curl --include --silent http://{{ nexus_server }}:{{ nexus_port }}"
+  register: nexus_return
+
+# then set internal fact vars according to nexus version
+#nexus_root_url:          # Nexus 3: /            Nexus 2:  /nexus
+#nexus_repo_url:          # Nexus 3: /repository  Nexus 2: /content/repositories
+
+
+- name: set nexus version fact for nexus 3
+  set_fact:
+    nexus_version: 3
+    nexus_root_url: 
+    nexus_repo_url: /repository
+  when: nexus_return.stdout.find("Nexus/3") != -1
+
+- name: set nexus version fact for nexus 2
+  set_fact:
+    nexus_version: 2
+    nexus_root_url: /nexus
+    nexus_repo_url: /content/repositories
+  when: nexus_return.stdout.find("Jetty") != -1
+
+- name: set maven central repo fact for nexus 2
+  set_fact:
+    central_repo: central
+  when: nexus_version == 2 
+  
+- name: set maven central repo fact for nexus 3
+  set_fact:
+    central_repo: maven-central
+  when: nexus_version == 3
+  
+- name: Creates the maven_user_settings.xml file (not cloud)
+  template: 
+    src: maven_user_settings.xml.j2 
+    dest: "{{ talend_root }}/cmdline/studio/configuration/maven_user_settings.xml"
+    mode: 0744
+    force: yes
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}" 
+  when: talend_cp_zip is not defined
+    
+- name: Creates the maven_user_settings.xml file for Talend Cloud
+  template: 
+    src: maven_user_settings_cloud.xml.j2 
+    dest: "{{ talend_root }}/cmdline/studio/configuration/maven_user_settings.xml"
+    mode: 0744
+    force: yes
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}" 
+  when: talend_cp_zip is defined
+    
+- name: Creates the default settings.xml file
+  copy: 
+    src: "{{ talend_root }}/cmdline/studio/configuration/maven_user_settings.xml" 
+    dest: /etc/maven/settings.xml
+    mode: 0744
+    owner: "root"
+    group: "root"   

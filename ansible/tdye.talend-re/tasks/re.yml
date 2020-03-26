@@ -1,0 +1,82 @@
+---
+# ./tasks/re.yml
+
+ - name:  create directory
+   command:  "mkdir -p {{ talend_root }}"  
+  
+ - name: untar the Remote Engine
+   command:  "tar -xf {{ talend_re_install_path }}/{{ talend_re_zip }} -C {{ talend_root }}"
+    
+ - name: change owner of RE
+   command:  "chown -R   {{ talend_user }}:{{ talend_group }} {{ talend_root }}"
+ 
+
+ - name: find RE directory
+   find: 
+     paths: "{{ talend_root }}"
+     patterns: "Talend-RemoteEngine*"
+     file_type: directory
+     recurse: yes
+   register: remote_engine_dir
+    
+ - debug: 
+     var: remote_engine_dir.files[0].path    
+
+
+ 
+ - name:  Change paring region
+   lineinfile:
+    path: "{{ remote_engine_dir.files[0].path }}/etc/org.talend.ipaas.rt.pairing.client.cfg"
+    regexp: '^pairing.service.url='
+    line: "pairing.service.url={{ pairing_service_url }}"
+    
+
+
+ 
+ 
+ - name: Temporarily Start Karaf
+   command: "bin/start"
+   args:
+     chdir: "{{ remote_engine_dir.files[0].path }}"
+   become: yes
+   become_user: "{{ talend_user }}"
+
+ - name: install the wrapper
+   command: "bin/client -u tadmin -p tadmin -h localhost -r 6 -d 2 -v \"feature:install wrapper\""
+   args:
+     chdir: "{{ remote_engine_dir.files[0].path }}"
+   become: yes
+   become_user: "{{ talend_user }}"
+ 
+ - name: install the wrapper
+   command: "bin/client -u tadmin -p tadmin -h localhost -r 6 -d 2 -v \"wrapper:install -n Talend-Remote-Engine\""
+   args:
+     chdir: "{{ remote_engine_dir.files[0].path }}"
+   become: yes
+   become_user: "{{ talend_user }}" 
+  
+ - name: shut 'er down
+   command: "bin/client -u tadmin -p tadmin \"system:shutdown -f\""
+   args:
+     chdir: "{{ remote_engine_dir.files[0].path }}"
+   become: yes
+   become_user: "{{ talend_user }}"
+
+   
+ - name:  Change RUN_AS user
+   lineinfile:
+    path: "{{ remote_engine_dir.files[0].path }}/bin/Talend-Remote-Engine-service"
+    regexp: '^#RUN_AS_USER='
+    line: "RUN_AS_USER={{ talend_user }}"   
+   
+ - name:  Change paring key
+   lineinfile:
+    path: "{{ remote_engine_dir.files[0].path }}/etc/preauthorized.key.cfg"
+    regexp: '^remote.engine.pre.authorized.key ='
+    line: "remote.engine.pre.authorized.key = {{ pairing_key }}"
+ 
+ - name: change owner of RE --again 
+   command:  "chown -R   {{ talend_user }}:{{ talend_group }} {{ talend_root }}"
+ 
+ - name: enable systemd stuff
+   command: "systemctl enable {{ remote_engine_dir.files[0].path }}/bin/Talend-Remote-Engine.service"

@@ -1,0 +1,26 @@
+# SystemD descriptor file for TAC service
+
+[Unit]
+Description=Talend Administrator Center service
+Before=runlevel3.target runlevel5.target
+After=local-fs.target remote-fs.target network-online.target time-sync.target postgresql.target systemd-journald-dev-log.socket
+Wants=network-online.target
+Conflicts=shutdown.target
+
+[Service]
+Type=forking
+Restart=no
+TimeoutSec=5min
+KillMode=process
+Restart=no
+PIDFile={{ talend_root }}/tac/apache-tomcat/logs/tomcat.pid
+Environment=CATALINA_PID={{ talend_root }}/tac/apache-tomcat/logs/tomcat.pid
+ExecStart={{ talend_root }}/utils/srv_tac start
+ExecStop={{ talend_root }}/utils/srv_tac stop
+User={{ talend_user }}
+Group={{ talend_group }}
+WorkingDirectory={{ talend_root }}/tac
+SuccessExitStatus=143 SIGKILL
+
+[Install]
+WantedBy=multi-user.target

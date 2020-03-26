@@ -1,0 +1,61 @@
+---
+# tasks/ci.yml
+
+- name:  create directory
+  file:
+    path: "{{ talend_root }}/ci-builder/commandline-workspace"
+    state: directory
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}" 
+    mode: 0775
+    recurse: yes
+   
+    
+- name: unarchive CI
+  unarchive:
+    src: "{{ talend_ci_install_path }}/{{ talend_ci_zip }}"
+    dest: /tmp
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}" 
+    remote_src: no    
+
+- name: move CI to Talend Root/ci-builder
+  command: "mv /tmp/{{ (talend_ci_zip | splitext)[0] }} {{ talend_root }}/ci-builder"   
+  become_user: "{{ talend_user }}"  
+ 
+ 
+- name: Find CI jar file
+  find:
+    paths: "{{ talend_root }}/ci-builder"
+    recurse: yes
+    patterns: '*.jar'
+  register: found_jar
+    
+- debug: 
+    var: found_jar.files[0].path
+  
+- name: Find CI pom file
+  find:
+    paths: "{{ talend_root }}/ci-builder"
+    recurse: yes
+    patterns: '*.pom'
+  register: found_pom
+    
+- debug: 
+    var: found_pom.files[0].path 
+
+    
+# Install maven extension to maven local repo    
+- name: intall CI-Builder extensions to local mvn repo
+  command: "mvn install:install-file -Dfile={{ found_jar.files[0].path }} -DpomFile={{ found_pom.files[0].path }} -s {{ talend_root }}/cmdline/studio/configuration/maven_user_settings.xml"
+  become_user: "{{ talend_user }}"
+  args:
+    chdir: "{{ talend_root }}/ci-builder/{{ (talend_ci_zip | splitext)[0] }}"
+ 
+ # Install maven extenstions into Nexus thirdparty repo
+- name: intall CI-Builder extensions to nexus third part repo
+  command: "mvn deploy:deploy-file -Dfile={{ found_jar.files[0].path }} -DpomFile={{ found_pom.files[0].path }} -DrepositoryId=thirdparty -Durl=http://{{ nexus_server }}:{{ nexus_port }}{{ nexus_root_url }}{{ nexus_repo_url }}/thirdparty/ -s {{ talend_root }}/cmdline/studio/configuration/maven_user_settings.xml"
+  become_user: "{{ talend_user }}"
+  args:
+    chdir: "{{ talend_root }}/ci-builder/{{ (talend_ci_zip | splitext)[0] }}"    
+  ignore_errors: yes

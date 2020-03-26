@@ -1,0 +1,20 @@
+---
+# ./tasks/ci_systemd.yml
+
+- name: Creates the cmdline system service file
+  template: 
+    src: talend-cmdline.service.j2 
+    dest: /etc/systemd/system/talend-cmdline-{{ talend_version }}.service
+    mode: 0755
+    owner: root
+    group: root    
+   
+- name: create Talend systemd service link
+  file:
+    src: /etc/systemd/system/talend-cmdline-{{ talend_version }}.service
+    dest: /etc/systemd/system/multi-user.target.wants/talend-cmdline-{{ talend_version }}.service
+    state: link
+    owner: root
+    group: root
+    mode: 0777
+  

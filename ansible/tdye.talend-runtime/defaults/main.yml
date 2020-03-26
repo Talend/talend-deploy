@@ -1,0 +1,29 @@
+---
+# Variables listed here are applicable to all host groups
+
+talend_root: /opt/talend-7.1.1
+talend_version: 7.1.1
+
+talend_user: talend
+talend_group: talend
+
+# Runtime params
+talend_runtime_install_path: /talend_install/Manual_Installation/Runtime
+talend_runtime_zip: Talend-Runtime-V7.1.1.tar
+
+# ports
+http_port: 8040
+https_port: 9001
+rmi_registry_port: 1099
+rmi_server_port: 44444
+ssh_port: 8101
+file_server_port: 8001
+monitoring_port: 8888
+messaging_port: 8555
+
+# Azure FS parameters
+azure_vm: false	
+az_username: XXXXXXXXXXX
+az_password: YYYYYYYYYYYYYYYYYYYYY
+az_src: //ZZZZZZZZZZZZZZZZ.file.core.windows.net/<share name>
+az_path: /talend_install

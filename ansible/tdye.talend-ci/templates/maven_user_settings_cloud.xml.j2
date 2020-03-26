@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<localRepository>{{ talend_root }}/cmdline/studio/configuration/.m2/repository</localRepository>
+
+  <interactiveMode/>
+  <usePluginRegistry/>
+  <offline/>
+  
+<servers>
+    <!-- credentials to access the default releases/snapshots repositories -->
+    <server>
+        <id>releases</id>
+        <username>{{ nexus_user }}</username>
+        <password>{{ nexus_password }}</password>
+    </server>
+    <server>
+        <id>snapshots</id>
+        <username>{{ nexus_user }}</username>
+        <password>{{ nexus_password }}</password>
+    </server>
+    <!-- credentials to access the repositories holding external jars -->  
+    <server>
+        <id>talend-custom-libs-release</id>
+        <username>{{ nexus_user }}</username>
+        <password>{{ nexus_password }}</password>
+    </server>
+    <server>
+        <id>talend-custom-libs-snapshot</id>
+        <username>{{ nexus_user }}</username>
+        <password>{{ nexus_password }}</password>
+    </server>
+    
+    <!-- credentials to access the repositories holding maven plugins -->
+    <server> <!-- central (as proxy) -->
+        <id>central</id>
+        <username>{{ nexus_user }}</username>
+        <password>{{ nexus_password }}</password>
+    </server>
+    <server>
+        <id>thirdparty</id>
+        <username>{{ nexus_user }}</username>
+        <password>{{ nexus_password }}</password>
+    </server>
+    <server>
+        <id>{{ talend_cloud_service_url }}</id>
+        <username>{{ talend_cloud_service_login }}</username>
+        <password>{{ talend_cloud_service_password }}</password>
+    </server>
+</servers>
+
+<profiles>
+    <profile>
+        <id>talend-ci</id>
+        <repositories>
+            <repository>
+                <id>central</id>
+                <name>central</name>
+                <url>http://{{ nexus_server }}:{{ nexus_port }}{{ nexus_root_url }}{{ nexus_repo_url }}/{{ central_repo }}/</url>
+                <layout>default</layout>
+            </repository>
+            <repository>
+                <id>talend-custom-libs-release</id>
+                <name>talend-custom-libs-release</name>
+                <url>http://{{ nexus_server }}:{{ nexus_port }}{{ nexus_root_url }}{{ nexus_repo_url }}/talend-custom-libs-release/</url>
+                <layout>default</layout>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+            </repository>
+            <repository>
+                <id>talend-custom-libs-snapshot</id>
+                <name>talend-custom-libs-snapshot</name>
+                <url>http://{{ nexus_server }}:{{ nexus_port }}{{ nexus_root_url }}{{ nexus_repo_url }}/talend-custom-libs-snapshot/</url>
+                <layout>default</layout>
+                <releases>
+                    <enabled>false</enabled>
+                </releases>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </repository>
+        </repositories>
+        
+        <pluginRepositories>            
+            <pluginRepository>
+                <id>central</id>
+                <name>central</name>
+                <url>http://{{ nexus_server }}:{{ nexus_port }}{{ nexus_root_url }}{{ nexus_repo_url }}/{{ central_repo }}/</url>
+                <layout>default</layout>
+            </pluginRepository>
+            <pluginRepository>
+                <id>thirdparty</id>
+                <name>thirdparty</name>
+                <url>http://{{ nexus_server }}:{{ nexus_port }}{{ nexus_root_url }}{{ nexus_repo_url }}/thirdparty/</url>
+                <layout>default</layout>
+            </pluginRepository>
+        </pluginRepositories>
+    </profile>
+</profiles>
+
+<activeProfiles>
+    <activeProfile>talend-ci</activeProfile>
+</activeProfiles>
+
+</settings>

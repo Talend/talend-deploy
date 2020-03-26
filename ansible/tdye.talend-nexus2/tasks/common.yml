@@ -1,0 +1,11 @@
+---
+# ./tasks/common.yml
+ 
+- name: create Talend root dir
+  file:
+    path: "{{ talend_root }}"
+    state: directory
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+    mode: 0775
+    recurse: yes

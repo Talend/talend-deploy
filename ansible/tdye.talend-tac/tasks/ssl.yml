@@ -1,0 +1,48 @@
+---
+# ./tac/tasks/ssl/yml
+# ssl code contributed by Ram Tak
+
+- name: Import SSL certificate from LDAP to a given cacerts keystore
+  java_cert:
+    cert_url: "{{ ldapserver_url }}"
+    cert_port: "{{ ldapserver_port }}"
+    keystore_path: "{{ keystore_file_path }}"
+    keystore_pass: "{{ keystore_password }}"
+    state: present
+  when: ldapserver_url is defined
+
+- name: Import SSL certificate from BitBucket to a given cacerts keystore
+  java_cert:
+    cert_url: "{{ bitbucketserver_url }}"
+    cert_port: "{{ bitbucketserver_port }}"
+    keystore_path: "{{ keystore_file_path }}"
+    keystore_pass: "{{ keystore_password }}"
+    state: present 
+  when: bitbucketserver_url is defined
+
+#- name: Comment the HTTP settings
+#  replace:
+#    dest: /opt/talend-7.2.1/tac/apache-tomcat/conf/server.xml
+#    regexp: '<Connector address'
+#    replace: '<!-- <Connector address'
+
+#- name: Comment the HTTP settings2
+#  replace:
+#    dest: /opt/talend-7.2.1/tac/apache-tomcat/conf/server.xml
+#    regexp: '<!-- A "Connector" using the shared thread pool'
+#    replace: '--> <!-- A "Connector" using the shared thread pool'
+
+
+#- name: Configure HTTPS for TAC
+#  blockinfile:
+#    path: /opt/talend-7.2.1/apache-tac/tomcat/conf/server.xml
+#    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK -->"
+#    insertafter: '<Service name="Catalina">'
+#    block: |
+#
+#          <Connector address="0.0.0.0" port="8080" protocol="HTTP/1.1" SSLEnabled="true"
+#               maxThreads="150" scheme="https" secure="true"
+#               clientAuth="false" sslProtocol="TLS"
+#               keystoreFile="/home/ec2-user/talendkey"
+#               keystorePass="changeit"/>
+

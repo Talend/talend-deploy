@@ -1,0 +1,76 @@
+---
+# ./tdye.talend-tac/defaults/main.yaml
+
+# Defaults file for tdye.talend-tac
+# Convention is not to edit this file, but pass the parameters at role instantiation via a seperate parameter file
+
+# talend_root is the installation destination for TAC
+talend_root: /opt/talend-7.2.1
+talend_version: 7.2.1
+
+# talend_user and group are the Linux owner and group name of the TAC filesystem
+talend_user: talenduser
+talend_group: talendgroup
+
+## TAC params
+# Set download_talend to true to download install files from Talend content provider
+#     for this to work, you must supply all information from your licensing email sent from Talend
+# 
+# For security purposes, these should be passed to ansible from the calling process
+#
+#talend_download: true
+#talend_download_user: UUUU
+#talend_download_pw: XXXXXx
+#talend_download_url: http://www.opensourceetl.net/aaa/bbb_ccc/
+
+#  The talend_install_path is the source directory for the TAC manual installer file.
+#  This would be the enterprise manual installer for TAC downloaded from Talend.  Download links are sent with your license file.
+#  If talend_download is false, then talend_install_path must point to the pre-downloaded Talend Manual install files
+talend_install_path: /talend_install/downloads
+
+
+# talend_tac_zip is the name of the manual installer file for TAC.  It will be a zip file.
+talend_tac_zip: Talend-AdministrationCenter-XXXXXXXXXXXXXX-V7.2.1.zip
+
+# TAC Database parameters
+tac_db_url: jdbc:mariadb://localhost:3306/tac_701
+tac_db_username: talend
+tac_db_password: talend
+tac_db_jdbc_path: /talend_install/Manual_Installation/files
+tac_db_jdbc_driver: mariadb-java-client-2.2.2.jar
+tac_db_jdbc_driver_name: org.mariadb.jdbc.Driver
+
+#LDAP and Bitbucket parameters
+#ldapserver_url: ldap.<domain>.com
+#ldapserver_port: 636
+#bitbucketserver_url: <bitbucket-url>
+#bitbucketserver_port: 8443
+#keystore_file_path: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.222.b10-0.el8_0.x86_64/jre/lib/security/cacerts
+#keystore_password: <keystore pw>
+
+# HA params
+enable_ha: true
+
+#Tomcat params
+tomcat_version: 8.0.42
+tomcat_use_java: false
+java_home: /usr/java/default
+tomcat_use_apr: false
+tomcat_user_name: talenduser
+tomcat_user_group: talendgroup
+
+
+# a mount point that contains the installation source is required.  Currently it must be mounted to '/talend_install'
+# if you are building TAC in Azure, you can use the Azure File Storage system to provide the install files.
+# This must be created beforehand, and populated with the Talend manual installer files beforehand.
+# File path for the manual installer files must conform to other path variables for this role.
+
+# set azure_vm to true to enable this feature.  Be sure the other variables have valid values
+
+# Azure FS parameters
+#
+azure_vm: false
+az_username: XXXXX
+az_password: YYYYY
+az_src: //XXXXXXXXXX.file.core.windows.net/tac
+az_path: /talend_install

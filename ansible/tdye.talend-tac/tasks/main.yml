@@ -1,0 +1,60 @@
+---
+# ./tac/main.yml
+
+- name: Mount Azure FS
+  mount:
+    path: "{{ az_path }}"
+    src: "{{ az_src }}"
+    fstype: cifs
+    opts: "vers=3.0,username={{ az_username }},password={{ az_password }},dir_mode=0777,file_mode=0777,sec=ntlmssp"
+    state: mounted
+  when: azure_vm
+  
+- name: Download Talend Install Files
+  include_tasks: download.yml 
+  when: talend_download
+     
+- name: Include Core TAC
+  include_tasks: tac.yml
+  
+- name: TAC SystemD stuff
+  include_tasks: tac_systemd.yml
+ 
+
+- name: Test for firewalld running
+  command: systemctl status firewalld
+  register: firewalld_status
+  ignore_errors: true
+
+- debug: msg="**** firewalld is running"
+  when: firewalld_status.stdout.find("running") != -1
+
+- debug: msg="**** firewalld is not running"
+  when: firewalld_status.stdout.find("running") == -1
+
+- name: Install firewalld rules
+  import_tasks: firewalld.yml
+  when: firewalld_status.stdout.find("running") != -1
+
+- name: Configure TAC for DB
+  include_tasks: configure_tac_db.yml
+
+- name: Enable metaservlet
+  include_tasks: metaservlet.yml
+
+- name: Enable trust
+  include_tasks: trust.yml
+  when: keystore_file_path is defined
+
+- name: Enable ssl
+  include_tasks: ssl.yml
+  when: ldapserver_url is defined
+
+- name: Enable TAC HA
+  include_tasks: ha.yml
+  when: enable_ha is defined
+
+- name: Start TAC
+  command: /bin/true
+  notify: Start TAC
+  

@@ -1,0 +1,17 @@
+{
+	"data": {
+		"repoType": "hosted",
+		"id": "talend-custom-libs-snapshot",
+		"name": "talend-custom-libs-snapshot",
+		"writePolicy": "ALLOW_WRITE_ONCE",
+		"browseable": true,
+		"indexable": true,
+		"exposed": true,
+		"notFoundCacheTTL": 1440,
+		"repoPolicy": "SNAPSHOT",
+		"provider": "maven2",
+		"providerRole": "org.sonatype.nexus.proxy.repository.Repository",
+		"downloadRemoteIndexes": false,
+		"checksumPolicy": "IGNORE"
+	}
+}

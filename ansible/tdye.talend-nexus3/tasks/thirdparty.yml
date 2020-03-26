@@ -1,0 +1,65 @@
+---
+# ./tasks/thirdparty.yml
+
+# wait for nexus to be up and running
+- name: Wait for nexus server to start
+  wait_for:
+    host: localhost
+    port: "{{ nexus_port }}"
+    state: started
+    delay: 10
+ 
+
+- name:  determine if thirdparty repo already exists
+  uri:
+    url: "http://localhost:{{ nexus_port }}/service/rest/repository/browse/thirdparty"
+    method: GET
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    force_basic_auth: yes
+    status_code: 200, 404
+    headers:
+      Content-Type: "text/plain"
+  register: thirdparty_return
+ 
+- debug: 
+    var: thirdparty_return.status
+ 
+
+# Create Nexus 'thirdparty' repository.
+- name: Create Nexus3 thirdparty repo script
+  uri:
+    url: "http://localhost:{{ nexus_port }}/service/rest/v1/script"
+    method: POST
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    body: {"name": "thirdparty","type": "groovy","content": "repository.createMavenHosted('thirdparty')"}
+    force_basic_auth: yes
+    status_code: 204
+    body_format: json    
+  when: thirdparty_return.status == 404
+    
+    
+- name: Run Nexus3 thirdparty repo script
+  uri:
+    url: "http://localhost:{{ nexus_port }}/service/rest/v1/script/thirdparty/run"
+    method: POST
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    force_basic_auth: yes
+    status_code: 200
+    headers:
+      Content-Type: "text/plain"
+  when: thirdparty_return.status == 404 
+  
+- name: Run Nexus3 delete thirdparty repo script
+  uri:
+    url: "http://localhost:{{ nexus_port }}/service/rest/v1/script/thirdparty"
+    method: DELETE 
+    user: "{{ nexus_user }}"
+    password: "{{ nexus_password }}"
+    force_basic_auth: yes
+    status_code: 204
+    headers:
+      Content-Type: "application/json"
+  when: thirdparty_return.status == 404 

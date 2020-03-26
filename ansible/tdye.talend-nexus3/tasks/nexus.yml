@@ -1,0 +1,108 @@
+---
+# ./tasks/nexus.yml
+
+- name: unarchive Nexus
+  unarchive:
+    src: "{{ nexus_install_path }}/{{ nexus_archive }}"
+    dest: "{{ talend_root }}"
+  become_user: "{{ talend_user }}"
+ 
+
+- name: find nexus config file
+  find: 
+    paths: "{{ talend_root }}"
+    patterns: "nexus-3*"
+    file_type: directory
+    recurse: yes
+  register: nexus_config
+    
+- debug: 
+    var: nexus_config.files[0].path
+  
+- name:  set nexus port  
+  lineinfile:
+    path: "{{ nexus_config.files[0].path }}/etc/nexus-default.properties"
+    regexp: '^application-port='
+    line: "application-port={{ nexus_port }}"
+
+    
+- name: Ansible check Nexus repo exists on /nexus
+  stat:
+    path: /nexus/sonatype-work
+  register: nexus_repo
+
+- debug: msg="**** Nexus repo exists"
+  when: nexus_repo.stat.exists
+  
+- debug: msg="**** Nexus repo DOES NOT exist"
+  when: not nexus_repo.stat.exists   
+
+
+- name: find name of nexus dirs from inside zip file  
+  find: 
+    paths: "{{ talend_root }}"
+    patterns: '*-unix,nexus-2*'
+    file_type: directory
+    recurse: no
+  register: found_dir
+    
+- debug: 
+    var: found_dir.files[0].path
+  
+ 
+
+
+- name: find name sonatype repo from talend root dir
+  find: 
+    paths: "{{ talend_root }}"
+    patterns: "sonatype-work"
+    file_type: directory
+    recurse: yes
+  register: sonatype_work
+    
+- debug: 
+    var: sonatype_work.files[0].path
+
+
+
+ 
+  
+#1)  /nexus/sonatype-nexus does not exist; mv repo and softlink
+- name: Move sonatype-work because /nexus/sonatype-nexus does not exist
+  command: "mv {{ sonatype_work.files[0].path }}/ /nexus"
+  when: not nexus_repo.stat.exists
+    
+
+- name: /nexus/sonatype-nexus does not exist - Softlink to sonatype-work
+  file:
+    src: /nexus/sonatype-work
+    dest: "{{ sonatype_work.files[0].path }}"
+    state: link
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}" 
+  when: not nexus_repo.stat.exists  
+    
+   
+#2)  /nexus/sonatype-nexus exists; remove repo and softlink to /nexus/sonatype-nexus 
+- name: Remove sonatype-work because a linked repo exists  
+  file: 
+    path: "{{ sonatype_work.files[0].path }}"
+    state: absent
+  when: nexus_repo.stat.exists
+  
+- name: softlink to sonatype-work
+  file:
+    src: /nexus/sonatype-work
+    dest: "{{ sonatype_work.files[0].path }}"
+    state: link
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}" 
+  when: nexus_repo.stat.exists  
+    
+- name: chown Nexus repo
+  file:
+    path: /nexus
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+  when: nexus_repo.stat.exists
+ 

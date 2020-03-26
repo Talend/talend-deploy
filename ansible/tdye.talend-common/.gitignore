@@ -1,0 +1,4 @@
+**/*.rpm
+**/*.jar
+/tasks/repos.yml.roles
+/templates/roles.json.j2

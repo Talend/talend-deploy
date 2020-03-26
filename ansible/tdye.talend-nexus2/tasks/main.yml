@@ -1,0 +1,53 @@
+---
+# ./roles/nexus/main.yml
+
+- name: Include common tasks
+  include_tasks: common.yml
+   
+- name: Mount Azure FS for install files
+  mount:
+    path: "{{ az_path }}"
+    src: "{{ az_src }}"
+    fstype: cifs
+    opts: "vers=3.0,username={{ az_username }},password={{ az_password }},dir_mode=0777,file_mode=0777,sec=ntlmssp"
+    state: mounted
+  when: azure_vm
+
+- name: create Sonotype Nexus DB dir (not Azure)
+  file:
+    path: /nexus
+    state: directory
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+    mode: 0775
+  when: not azure_vm
+   
+- name: Include Core Nexus
+  include_tasks: nexus.yml
+
+         
+- name: Nexus SystemD stuff
+  include_tasks: nexus_systemd.yml
+ 
+- name: Test for firewalld running
+  command: systemctl status firewalld
+  register: firewalld_status
+  ignore_errors: true
+
+- debug: msg="**** firewalld is running"
+  when: firewalld_status.stdout.find("running") != -1
+
+- debug: msg="**** firewalld is not running"
+  when: firewalld_status.stdout.find("running") == -1
+
+- name: Install firewalld rules
+  import_tasks: firewalld.yml
+  when: firewalld_status.stdout.find("running") != -1
+  
+- name: Create Talend nexus repositories
+  include_tasks: repos.yml  
+ 
+#- name: Restart NEXUS
+#  command: /bin/true
+#  notify: Restart NEXUS
+  

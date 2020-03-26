@@ -1,0 +1,5 @@
+#!/bin/sh
+cd {{ talend_root }}/cmdline
+java -jar ../utils/telnet.jar localhost 8002 initLocal
+java -jar ../utils/telnet.jar localhost 8002 stopServer
+exit 0

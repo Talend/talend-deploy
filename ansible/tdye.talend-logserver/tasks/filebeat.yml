@@ -1,0 +1,29 @@
+---
+# ./rjs/roles/filebeat.yml
+
+- name: Creates the filebeat prospectors file
+  template: 
+    src: filebeat.yml.j2 
+    dest: "{{ talend_root }}/logserv/filebeat-6.1.2-linux-x86_64/filebeat.yml"
+    mode: 0755
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+    force: yes
+    
+- name: Creates the filebeat system service file
+  template: 
+    src: talend-filebeat.service.j2 
+    dest: "/etc/systemd/system/talend-filebeat-{{ talend_version }}.service"
+    mode: 0755
+    owner: root
+    group: root
+    
+   
+- name: create filebeat systemd service link
+  file:
+    src: "/etc/systemd/system/talend-filebeat-{{ talend_version }}.service"
+    dest: "/etc/systemd/system/multi-user.target.wants/talend-filebeat-{{ talend_version }}.service"
+    state: link
+    owner: root
+    group: root
+    mode: 0777
