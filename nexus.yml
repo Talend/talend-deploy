@@ -1,0 +1,6 @@
+- name: install Nexus 
+  hosts: "{{ dynamic_host | default('ec2_tag_name')}}"
+  become: true
+  roles:
+    - role: rtak.talend-nexus3
+

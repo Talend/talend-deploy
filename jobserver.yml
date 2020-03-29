@@ -1,0 +1,9 @@
+- name: install Jobserver
+  hosts: "{{ dynamic_host | default('ec2_tag_name')}}"
+  become: yes
+  become_method: sudo
+#  gather_facts: no
+  #become: true
+  roles:
+    - role: tdye.talend-rjs
+

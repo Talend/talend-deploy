@@ -1,0 +1,17 @@
+- name: apply common configuration to all nodes
+  hosts: "{{ dynamic_host | default('ec2_tag_name')}}"
+  remote_user: root
+  become: true
+  
+  roles:
+   - tdye.talend-common
+   
+- name: configure and deploy the TAC and Nexus software to a node
+  hosts: all
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  roles:
+   - tdye.talend-tac
+   
