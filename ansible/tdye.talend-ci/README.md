@@ -65,7 +65,7 @@ Example Playbook
 
 ```yaml
 - name: configure and deploy the Talend CI software to a node
-  hosts: all
+  hosts: "{{ dynamic_host | default('ec2_tag_name')}}"
   remote_user: root
   become: true
   gather_facts: yes

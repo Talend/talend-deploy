@@ -7,7 +7,7 @@ This role installs the Talend Logserver components on a compute node or VM
 
 A mount point called '/talend_install' is required where the Talend manual install files for logserver is stored.
 
-This role is has known to work with Enterprise Talend 7.0.
+This role is has known to work with Enterprise Talend 7.2.
 
 Role Dependencies
 -----------------
@@ -47,7 +47,7 @@ Example Playbook
 
 ```yaml
 - name: configure and deploy the TAC software to a node
-  hosts: all
+  hosts: "{{ dynamic_host | default('ec2_tag_name')}}"
   remote_user: root
   become: true
   gather_facts: yes

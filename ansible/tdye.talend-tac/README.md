@@ -8,7 +8,7 @@ TAC JDBC driver jar file are stored.
 
 A Talend supported RDMBS must exist and have a database created for TAC's use.
 
-This role should build a TAC for Talend enterprise releases 6.2 to 7.0.
+This role should build a TAC for Talend enterprise releases 6.2 to 7.2.
 
 Role Dependencies
 -----------------
@@ -94,7 +94,7 @@ Example Playbook
 
 ```yaml
 - name: configure and deploy the TAC software to a node
-  hosts: all
+  hosts: "{{ dynamic_host | default('ec2_tag_name')}}"
   remote_user: root
   become: true
   gather_facts: yes
