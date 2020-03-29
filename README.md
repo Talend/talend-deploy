@@ -9,10 +9,11 @@ Requirements to setup Ansible environment
 
 3) One needs to export some environment variables in order to get the ec2 tag name dynamically from AWS
 
+```yaml
 export ANSIBLE_INVENTORY=/etc/ansible/ec2.py
 export AWS_ACCESS_KEY_ID=<your_aws_access_key_id>
 export AWS_SECRET_ACCESS_KEY=<your_aws_secret_access_key>
-
+```
 
 Role Dependencies and Requirements
 -----------------
@@ -37,8 +38,9 @@ Example Playbook
 
 Example Playbook Run Command
 ----------------
+```yaml
 ansible-playbook  ~/Ansible/tac.yml   --extra-vars "dynamic_host=tag_Name_EC2_TAG_NAME"
-
+```
 
 License
 -------
