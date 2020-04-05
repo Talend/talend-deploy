@@ -13,6 +13,10 @@
 - name: Include common tasks
   include_tasks: common.yml
     
+- name: Download Talend Install Files
+  include_tasks: download.yml 
+  when: talend_download
+    
 - name: Include Core Remote Job Server
   include_tasks: rjs.yml
   
@@ -39,4 +43,5 @@
 - name: Restart RJS
   command: /bin/true
   notify: Restart RJS
+  when: running
 

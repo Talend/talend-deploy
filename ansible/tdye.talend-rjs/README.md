@@ -27,11 +27,22 @@ talend_user: talenduser
 talend_group: talendgroup
 
 
-# RJS params
-# talend_rjs_zip is the RJS manual installer file downloaded from Talend
-talend_rjs_zip: Talend-JobServer-XXXXXXX-V7.0.1.zip
+## RJS download params
+# Set download_talend to true to download install files from Talend content provider
+#     for this to work, you must supply all information from your licensing email sent from Talend
+# 
+# For security purposes, these should be passed to ansible from the calling process
+#
+#talend_download: true
+#talend_download_user: UUUU
+#talend_download_pw: XXXXXx
+#talend_download_url: http://www.opensourceetl.net/aaa/bbb_ccc/
 
-talend_rjs_nstall_path: /talend_install/Manual_Installation/RJS
+#  The talend_install_path is the source directory for the RJS manual installer file.
+#  This would be the enterprise manual installer for RJS downloaded from Talend.  Download links are sent with your license file.
+#  If talend_download is false, then talend_install_path must point to the pre-downloaded Talend Manual install files
+talend_rjs_install_path: /talend_install/downloads
+talend_rjs_zip: Talend-JobServer-20180411_1414-V7.0.1.zip
 
 ```
 
