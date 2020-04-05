@@ -16,7 +16,9 @@
 - name: Include Core Remote Engine
   include_tasks: re.yml
   
- 
+- name: Update OSGI HTTP config
+  include_tasks: osgi_http.yml
+  
 - name: Test for firewalld running
   command: systemctl status firewalld
   register: firewalld_status

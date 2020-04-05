@@ -1,0 +1,15 @@
+---
+# ./tasks/osgi_http.yml
+
+
+ - name:  Change osgi http listening address
+   lineinfile:
+    path: "{{ remote_engine_dir.files[0].path }}/etc/org.ops4j.pax.web.cfg"
+    regexp: '^\s*org.ops4j.pax.web.listening.addresses='
+    line: "org.ops4j.pax.web.listening.addresses={{ osgi_http_listening_addr }}"
+    
+ - name:  Change osgi http listening port
+   lineinfile:
+    path: "{{ remote_engine_dir.files[0].path }}/etc/org.ops4j.pax.web.cfg"
+    regexp: 'org.osgi.service.http.port='
+    line: "org.osgi.service.http.port={{ osgi_http_listening_port }}"    

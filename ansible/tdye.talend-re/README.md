@@ -45,6 +45,9 @@ running: false
 # suffix for system startup scripts
 wrapper_suffix: -dev
 
+#OSGI HTTP Service
+osgi_http_listening_addr: localhost
+osgi_http_listening_port: 8043
 
 ```
 
