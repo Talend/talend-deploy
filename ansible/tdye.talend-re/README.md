@@ -38,6 +38,14 @@ pairing_key: 01234567899999999
 pairing_service_url:  https://pair.eu.cloud.talend.com     # uncomment the pairing service for your region/account
 #pairing_service_url:  https://pair.us.cloud.talend.com
 #pairing_service_url:  https://pair.ap.cloud.talend.com
+
+# initial state of RE after install
+running: false
+
+# suffix for system startup scripts
+wrapper_suffix: -dev
+
+
 ```
 
 Dependencies

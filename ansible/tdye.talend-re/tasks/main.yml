@@ -36,4 +36,5 @@
 - name: Restart RE
   command: /bin/true
   notify: Start RE
+  when: running
 

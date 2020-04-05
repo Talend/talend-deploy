@@ -3,6 +3,6 @@
 
 - name: Start RE
   systemd:
-    name:  Talend-Remote-Engine.service
+    name:  Talend-Remote-Engine{{ wrapper_suffix }}.service
     state: started
     daemon_reload: yes
