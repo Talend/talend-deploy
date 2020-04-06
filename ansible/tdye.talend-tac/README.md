@@ -68,6 +68,13 @@ tomcat_use_apr: false
 tomcat_user_name: talenduser
 tomcat_user_group: talendgroup
 
+# Other TAC functions
+# enable_ha: true	# to enable High Availability in Quartz Scheduler
+
+# initial state of TAC after install
+running: false
+
+
 
 # a mount point that contains the installation source is required.  Currently it must be mounted to '/talend_install'
 # if you are building TAC in Azure, you can use the Azure File Storage system to provide the install files.

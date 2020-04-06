@@ -7,6 +7,8 @@
     #src: /talend_install/Manual_Installation/TAC/Talend-AdministrationCenter-20180116_1512-V6.5.1.zip
     src: "{{ talend_install_path }}/{{ talend_tac_zip }}"
     dest: /tmp
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
     remote_src: yes
 
 

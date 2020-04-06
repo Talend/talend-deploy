@@ -52,9 +52,11 @@
 
 - name: Enable TAC HA
   include_tasks: ha.yml
-  when: enable_ha is defined
+  when: enable_ha 
 
 - name: Start TAC
   command: /bin/true
   notify: Start TAC
+  when: running
+
   

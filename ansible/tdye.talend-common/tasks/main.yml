@@ -1,6 +1,17 @@
 ---
 # main.yml
-  
+ 
+- name: create group
+  group:
+    name: "{{ talend_group }}" 
+    state: present
+      
+- name: create user
+  user:
+    name: "{{ talend_user }}"
+    shell: /bin/bash
+    group: "{{ talend_group }}" 
+    
 - name: create Talend tomcat dir
   file:
     path: "{{ talend_root }}/tac"

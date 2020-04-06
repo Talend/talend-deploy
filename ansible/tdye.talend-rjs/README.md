@@ -44,6 +44,10 @@ talend_group: talendgroup
 talend_rjs_install_path: /talend_install/downloads
 talend_rjs_zip: Talend-JobServer-20180411_1414-V7.0.1.zip
 
+# initial state of RJS after install
+running: false
+
+
 ```
 
 Dependencies

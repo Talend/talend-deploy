@@ -2,6 +2,7 @@
 dependencies:
   - { role: ChristopherDavenport.universal-tomcat, 
             become: true,
+            user: "{{ talend_user }}",
             tomcat_version: 8.0.42,
             tomcat_use_java: false,
             java_home: /usr/java/default,
