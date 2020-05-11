@@ -55,20 +55,35 @@ Example Playbook
     - tac
 ````
 
+Getting Started
+----------------
+
+1.  clone git repo
+2.  switch to development branch if desired
+3.  download license file and place in root directory of cloned repo
+4.  change talend license userid and password in vars/talend.yml
+5.  update database connectivity in vars/talend.yml
+6.  retrieve jdbc driver and load it to location specified in vars/talend.yml tac_db_jdbc_driver
+7.  modify example/inventory
+8.  modify example/group_vars/all if desired, but defaults shoudl be ok
+9.  run a playbook
+
+
 Example Playbook Run Command
 ----------------
 
 Use example playbook with static hosts files
 
 ````bash
-ansible-playbook -i example/inventory tac.yml   --extra-vars "dynamic_host=tag_Name_EC2_TAG_NAME"
+ansible-playbook -i example/inventory tac.yml 2>&1 | tee tac.log
 ````
 
 Use AWS dynamic inventory
 
 ````bash
-ansible-playbook -i example/inventory tac.yml   --extra-vars "dynamic_host=tag_Name_EC2_TAG_NAME"
+ansible-playbook -i example/inventory tac.yml --extra-vars "dynamic_host=tag_Name_EC2_TAG_NAME" 2>&1 tac.log
 ````
+
 
 
 License
