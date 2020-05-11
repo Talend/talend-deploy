@@ -1,0 +1,23 @@
+---
+# Global variable overrides at the Play scope.
+# These variables are all set at the Defaults level of various roles.
+# They are centralized here so they can be overridden.
+# This and similar files containing sensitive credentials should be kept out of source control.
+
+# Set talend_download to true to download install files from the Talend content provider.
+# For this to work, you must supply all information from your licensing email sent from Talend
+# For security purposes, these should be passed to ansible from the calling process
+
+talend_download: true
+talend_download_user: none
+talend_download_pw: none
+talend_download_url: http://www.opensourceetl.net/tis/tpdsbdrt_731
+
+# TAC Database parameters
+tac_db_url: jdbc:mysql://your-db-host:3306/tac
+tac_db_username: your-db-userid
+tac_db_password: your-db-password
+tac_db_jdbc_path: /home/centos/talend_install/mysql-connector-java-8.0.20
+tac_db_jdbc_driver: mysql-connector-java-8.0.20.jar
+#tac_db_jdbc_driver_name: com.mysql.jdbc.Driver
+tac_db_jdbc_driver_name: com.mysql.cj.jdbc.Driver

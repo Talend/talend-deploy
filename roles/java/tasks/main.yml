@@ -1,0 +1,26 @@
+---
+- name: Install Java 1.8
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - java-1.8.0-openjdk
+
+- name: Save java home folder
+  shell: "dirname $(dirname $(readlink -e $(which java)))"
+  register: java_dir
+  changed_when: false
+
+- name: Check JAVA_HOME on target system (1)
+  stat:
+    path: "{{ java_dir.stdout }}/bin/java"
+  register: java_dir_java
+
+- name: Check JAVA_HOME on target system (2)
+  fail:
+    msg: "Please check link {{ java_dir_java.path }}/bin/java, it does not point to a java executable within standard Java/JRE folder structure"
+  when: not java_dir_java.stat.exists
+
+- name: Set java_home fact for host
+  set_fact:
+    java_home: "{{ java_dir_java.stat.path }}"

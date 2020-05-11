@@ -44,4 +44,3 @@
   command: /bin/true
   notify: Restart RJS
   when: running
-

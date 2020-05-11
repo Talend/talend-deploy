@@ -1,8 +1,0 @@
----
-# roles/tac/handlers/main.yml
-
-- name: Start TAC
-  systemd:
-    name: tomcat
-    state: started
-    daemon_reload: yes

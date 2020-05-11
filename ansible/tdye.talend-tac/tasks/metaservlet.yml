@@ -1,6 +1,0 @@
----
-# ./tac/tasks/metaservlet.yml
-# metaservlet code contributed by Ram Tak
-
-- name: Configuring MetaServlet
-  command: "chmod +x {{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator/WEB-INF/classes/MetaServletCaller.sh"

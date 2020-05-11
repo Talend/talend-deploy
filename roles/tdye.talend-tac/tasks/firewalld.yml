@@ -1,0 +1,13 @@
+---
+
+# offline option modifies firewalld if installed but not running
+- name: open firewall port for TAC    
+  firewalld:
+    port: 8080/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+    offline: yes
+  when: ansible_facts.services["firewalld.service"] is defined
+
+

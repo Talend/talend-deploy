@@ -32,10 +32,9 @@
     
 - name: create Talend install dir
   file:
-    path: /talend_install
+    path: "{{ talend_install_path }}"
     state: directory
     owner: root
     group: root
     mode: 0775
-    
 

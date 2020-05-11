@@ -1,0 +1,22 @@
+---
+# Download TAC manual install zip file
+
+
+- name: create Talend install dir if not already done
+  file:
+    path: "{{ talend_install_path }}"
+    state: directory
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+    mode: 0775
+    recurse: yes
+
+- name:  download TAC
+  get_url:
+    url: "{{ talend_download_url }}/{{ talend_tac_zip }}"
+    dest: "{{ talend_install_path }}/{{ talend_tac_zip }}"
+    mode: "0440"
+    owner: "{{ talend_user }}"
+    group: "{{ talend_group }}"
+    url_username: "{{ talend_download_user }}"
+    url_password: "{{ talend_download_pw }}"

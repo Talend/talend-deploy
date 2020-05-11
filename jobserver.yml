@@ -1,9 +1,14 @@
-- name: install Jobserver
+- name: Install Jobserver
   hosts: "{{ dynamic_host | default('ec2_tag_name')}}"
   become: yes
+  become_user: root
   become_method: sudo
-#  gather_facts: no
-  #become: true
+  remote_user: centos
+  gather_facts: yes
+  vars_files:
+    - vars/talend.yml
   roles:
+    - tdye.talend-common
     - role: tdye.talend-rjs
-
+  tags:
+    - jobserver

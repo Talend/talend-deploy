@@ -1,0 +1,85 @@
+---
+# Global variables defined at the Group scope.
+# These are all set at the Defaults level of various Roles.
+# They are centralized here so they can be overridden.
+
+# talend_root is the installation destination for TAC
+#talend_root: /opt/talend
+#talend_version: 7.3.1
+#talend_release_date: "20200219"
+#talend_release: "1130"
+
+# talend_user and group are the Linux owner and group name of the TAC filesystem
+#talend_user:   talend
+#talend_group:  talend
+
+# TAC admin user/password
+#tac_admin_user: security@company.com
+#tac_admin_pass: admin
+
+# tomcat
+#tomcat_webapps_location: "{{ talend_root }}/tac/apache-tomcat/webapps"
+
+# TAC web-application
+#tac_port: "8080"
+#tac_webapp_name: org.talend.administrator
+#tac_config_location: "{{ tomcat_webapps_location }}/{{ tac_webapp_name }}/WEB-INF/classes"
+
+# Set talend_download to true to download install files from the Talend content provider.
+# For this to work, you must supply all information from your licensing email sent from Talend
+# For security purposes, these should be passed to ansible from the calling process
+
+#talend_download: true
+#talend_download_user: none
+#talend_download_pw: none
+#talend_download_url: http://www.opensourceetl.net/tis/tpdsbdrt_731
+
+# The talend_install_path is the source directory for the TAC manual installer files.
+# This would be the enterprise manual installer for TAC downloaded from Talend.
+# Download links are sent with your license file.
+# If talend_download is false, then talend_install_path must point to the pre-downloaded Talend Manual install files
+#talend_install_path: /talend_install
+
+# talend_tac_zip is the name of the manual installer file for TAC.  It will be a zip file.
+#talend_tac_zip: "Talend-AdministrationCenter-{{ talend_release_date }}_{{talend_release}}-V{{talend_version}}.zip"
+
+# TAC Database parameters
+#tac_db_url: jdbc:mysql://your-db-host:3306/tac
+#tac_db_username: your-db-userid
+#tac_db_password: your-db-password
+#tac_db_jdbc_path: /home/centos/talend_install/mysql-connector-java-8.0.20
+#tac_db_jdbc_driver: mysql-connector-java-8.0.20.jar
+#tac_db_jdbc_driver_name: com.mysql.jdbc.Driver
+
+# High Availability in Quartz Scheduler
+# enable_ha: true
+
+#Tomcat params
+#tomcat_version: 8.0.42
+#tomcat_use_java: false
+# java_home provided by java role
+#java_home: "{{ java_home }}"
+#tomcat_use_apr: false
+#tomcat_user_name: "{{ talend_user }}"
+#tomcat_user_group: "{{ talend_group }}"
+
+# Install license automatically during installation
+# Note that file must be on the controller host (local file)
+# tac_install_license: yes
+#tac_license_file: license
+
+# a mount point that contains the installation source is required.  Currently it must be mounted to '/talend_ins$
+# if you are building TAC in Azure, you can use the Azure File Storage system to provide the install files.
+# This must be created beforehand and populated with the Talend manual installer files.
+# File path for the manual installer files must conform to other path variables for this role.
+
+# set azure_vm to true to enable this feature.  Be sure the other variables have valid values
+
+# Azure FS parameters
+#
+#azure_vm: false
+#az_username: XXXXX
+#az_password: YYYYY
+#az_src: //XXXXXXXXXX.file.core.windows.net/tac
+#az_path: "{{ talend_install_path }}"
+

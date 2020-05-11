@@ -4,40 +4,30 @@
 
 - name: unarchive TAC and Nexus
   unarchive:
-    #src: /talend_install/Manual_Installation/TAC/Talend-AdministrationCenter-20180116_1512-V6.5.1.zip
     src: "{{ talend_install_path }}/{{ talend_tac_zip }}"
     dest: /tmp
     owner: "{{ talend_user }}"
     group: "{{ talend_group }}"
     remote_src: yes
 
-
 - name: check for presence of endorsed dir in TAC zip
-  stat: 
+  stat:
     path: "/tmp/{{ (talend_tac_zip | splitext)[0] }}/endorsed"
   register: endorsed_dir
 
-
-    
 - name: move TAC endorsed to Tomcat
   copy:
-   # src: /tmp/Talend-AdministrationCenter-20180116_1512-V6.5.1/endorsed
     src: "/tmp/{{ (talend_tac_zip | splitext)[0] }}/endorsed"
     dest: "{{ talend_root }}/tac/apache-tomcat/"
     owner: "{{ talend_user }}"
     group: "{{ talend_group }}"
   when: endorsed_dir.stat.exists
- 
 
 - name: move TAC war to Tomcat
   copy:
-    #src: /tmp/Talend-AdministrationCenter-20180116_1512-V6.5.1/org.talend.administrator-6.5.1.war
-    src: "/tmp/{{ (talend_tac_zip | splitext)[0] }}/org.talend.administrator-{{ talend_version }}.war"
-    dest: "{{ talend_root }}/tac/apache-tomcat/webapps/org.talend.administrator.war"
+    src: "/tmp/{{ (talend_tac_zip | splitext)[0] }}/{{ tac_webapp_name }}-{{ talend_version }}.war"
+    remote_src: yes
+    dest: "{{ talend_root }}/tac/apache-tomcat/webapps/{{ tac_webapp_name }}.war"
     owner: "{{ talend_user }}"
-    group: "{{ talend_group }}"    
+    group: "{{ talend_group }}"
 
-## Pause for 25 seconds to build allow tomcat to explode the war
-#- pause:
-#  seconds: 25
-   

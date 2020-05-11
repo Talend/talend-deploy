@@ -1,0 +1,5 @@
+---
+- name: "Install unzip with yum"
+  yum:
+    name: unzip
+    state: present

@@ -1,0 +1,33 @@
+---
+# roles/tac/handlers/main.yml
+
+#- name: Start tac service
+#  systemd:
+#    name: tomcat
+#    state: started
+#    daemon_reload: yes
+
+- name: Get info about local license file
+  local_action: stat path="{{ tac_license_file }}"
+  register: tac_license_file_stat
+  when: tac_install_license | bool
+
+- name: Copy license file to TAC
+  when: tac_install_license | bool and tac_license_file_stat.stat.exists
+  copy:
+    src: "{{tac_license_file}}"
+    dest: "/home/{{talend_user}}"
+    owner: "{{talend_user}}"
+    group: "{{talend_group}}"
+    mode: '0644'
+
+- name: Grant execute permission on metaservlet
+  file:
+    path: "{{tac_config_location}}/MetaServletCaller.sh"
+    mode: '0755'
+
+- name: Install license using metaservlet
+  when: tac_install_license | bool and tac_license_file_stat.stat.exists
+  script:
+    cmd: set-license.sh "{{talend_user}}" "{{tac_license_file | basename}}" "{{tac_config_location}}" "{{tac_port}}" "{{tac_webapp_name}}" "{{tac_admin_user}}" "{{tac_admin_pass}}"
+  register: install_license_result

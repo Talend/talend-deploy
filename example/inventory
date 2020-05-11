@@ -1,0 +1,15 @@
+all:
+  children:
+    td_tac_group:
+      hosts:
+        tac:
+          ansible_host: "{{td_tac_node_private_ip}}"
+#      vars:
+  vars:
+    # tac
+    td_tac_node_private_ip: 10.0.0.83
+    td_tac_node_hostname: ip-10-0-0-83
+    td_tac_node_private_hostname: ip-10-0-0-83.ec2.internal
+    td_tac_node_public_ip: 35.171.155.32
+    td_tac_node_public_hostname: ec2-35-171-155-32.compute-1.amazonaws.com
+
