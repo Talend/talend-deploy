@@ -149,6 +149,22 @@
 
  - name: change owner of RE --again
    command:  "chown -R   {{ talend_user }}:{{ talend_group }} {{ talend_root }}"
+   
+ - name: Add Run as Group to systemd service file
+   lineinfile:
+    path: "{{ remote_engine_dir.files[0].path }}/bin/Talend-Remote-Engine{{ wrapper_suffix }}.service"
+    line: "Group={{ talend_group }}"
+    insertafter: '^\[Service\]'
+    state: present
 
+ 
+ - name: Add Run as User to systemd service file
+   lineinfile:
+    path: "{{ remote_engine_dir.files[0].path }}/bin/Talend-Remote-Engine{{ wrapper_suffix }}.service"
+    line: "User={{ talend_user }}"
+    insertafter: '^\[Service\]'
+    state: present
+
+       
  - name: enable systemd stuff
    command: "systemctl enable {{ remote_engine_dir.files[0].path }}/bin/Talend-Remote-Engine{{ wrapper_suffix }}.service"
